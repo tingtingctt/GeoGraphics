@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
+using UnityEngine.XR.ARSubsystems;
+using UnityEngine.UI;
+
 public class ARPainting : MonoBehaviour
 {
     public GameObject paintPrefab;
@@ -9,9 +12,19 @@ public class ARPainting : MonoBehaviour
     public float offset;
     public MenuButton menuButton;
     public bool twoDimensional;
+
+
     private bool onTouchHold;
     private GameObject spawnedPaintPrefab;
     private Vector3 offsetVector;
+
+    private ARRaycastManager aRRaycastManager;
+    private static List<ARRaycastHit> hits = new List<ARRaycastHit>();
+    private Vector2 touchPosition;
+    private Pose hitPose;
+
+    public Text buttonText;
+
     // void = not returning anything
     // method: Vector3, Boolean, String, (returns this type of value)
     bool TryGetTouchPosition(out Vector2 touchPosition)
@@ -24,6 +37,13 @@ public class ARPainting : MonoBehaviour
         touchPosition = default;
         return false;
     }
+
+    private void Awake()
+    {
+        aRRaycastManager = GetComponent<ARRaycastManager>();
+    }
+
+
     void FixedUpdate()
     {
         if (menuButton.IsShowing == true)
@@ -56,17 +76,11 @@ public class ARPainting : MonoBehaviour
             if (touch.phase == TouchPhase.Ended)
             {
                 onTouchHold = false;
-                if (twoDimensional)
-                {
-                    StopTwoDPainting();
-                }
-                else
-                {
-                    StopThreeDPainting();
-                }
+                StopPainting();
             }
         }
     }
+
     private void ThreeDPainting()
     {
         if (spawnedPaintPrefab == null)
@@ -82,17 +96,51 @@ public class ARPainting : MonoBehaviour
             spawnedPaintPrefab.transform.rotation = arCamera.transform.rotation;
         }
     }
-    private void StopThreeDPainting()
+
+    private void StopPainting()
     {
         spawnedPaintPrefab.transform.position = spawnedPaintPrefab.transform.position;
         //PaintManager.instance.paints.Remove(spawnedPaintPrefab);
         spawnedPaintPrefab = null;
     }
+
+
     private void TwoDPainting()
     {
+        if (spawnedPaintPrefab == null)
+        {
+            spawnedPaintPrefab = Instantiate(paintPrefab, RaycastHitPosition(), arCamera.transform.rotation);
+        }
+        else
+        {
+            spawnedPaintPrefab.transform.position = RaycastHitPosition();
+            spawnedPaintPrefab.transform.rotation = arCamera.transform.rotation;
+        }
     }
 
-    private void StopTwoDPainting()
+    private Vector3 RaycastHitPosition()
     {
+        if(aRRaycastManager.Raycast(touchPosition, hits, TrackableType.PlaneWithinPolygon))
+        {
+            hitPose = hits[0].pose;
+            return hitPose.position;
+        }
+        else
+        {
+            return hitPose.position;
+        }
+    }
+
+    public void ChangePaintingType()
+    {
+        twoDimensional = !twoDimensional;
+        if(twoDimensional == true)
+        {
+            buttonText.text = "2d";
+        }
+        else
+        {
+            buttonText.text = "3d";
+        }
     }
 }
