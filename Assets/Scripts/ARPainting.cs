@@ -24,6 +24,7 @@ public class ARPainting : MonoBehaviour
     private Pose hitPose;
 
     public Text buttonText;
+    public Text raycastPositionText;
 
     // void = not returning anything
     // method: Vector3, Boolean, String, (returns this type of value)
@@ -50,35 +51,35 @@ public class ARPainting : MonoBehaviour
         {
             return;
         }
-        if (!TryGetTouchPosition(out Vector2 touchPosition))
+        if (TryGetTouchPosition(out Vector2 touchPosition))
         {
-            return;
-        }
-        if (Input.touchCount > 0)
-        {
-            Touch touch = Input.GetTouch(0);
-            //if (touch.phase == TouchPhase.Began)
-            if (touch.phase == TouchPhase.Stationary)
+            if (Input.touchCount > 0)
             {
-                onTouchHold = true;
-                if (onTouchHold == true)
+                Touch touch = Input.GetTouch(0);
+                //if (touch.phase == TouchPhase.Began)
+                if (touch.phase == TouchPhase.Stationary)
                 {
-                    if (twoDimensional)
+                    onTouchHold = true;
+                    if (onTouchHold == true)
                     {
-                        TwoDPainting();
-                    }
-                    else
-                    {
-                        ThreeDPainting();
+                        if (twoDimensional)
+                        {
+                            TwoDPainting();
+                        }
+                        else
+                        {
+                            ThreeDPainting();
+                        }
                     }
                 }
-            }
-            if (touch.phase == TouchPhase.Ended)
-            {
-                onTouchHold = false;
-                StopPainting();
+                if (touch.phase == TouchPhase.Ended)
+                {
+                    onTouchHold = false;
+                    StopPainting();
+                }
             }
         }
+        
     }
 
     private void ThreeDPainting()
@@ -120,15 +121,18 @@ public class ARPainting : MonoBehaviour
 
     private Vector3 RaycastHitPosition()
     {
-        if(aRRaycastManager.Raycast(touchPosition, hits, TrackableType.PlaneWithinPolygon))
+        if(aRRaycastManager.Raycast(new Vector2(Screen.width/2, Screen.height/2), hits, TrackableType.PlaneWithinPolygon))
         {
             hitPose = hits[0].pose;
+            raycastPositionText.text = hitPose.ToString();
             return hitPose.position;
         }
         else
         {
+            raycastPositionText.text = hitPose.ToString();
             return hitPose.position;
         }
+        
     }
 
     public void ChangePaintingType()
@@ -142,5 +146,6 @@ public class ARPainting : MonoBehaviour
         {
             buttonText.text = "3d";
         }
+
     }
 }
