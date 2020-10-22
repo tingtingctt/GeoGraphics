@@ -79,7 +79,7 @@ public class ARPainting : MonoBehaviour
                 }
             }
         }
-        
+
     }
 
     private void ThreeDPainting()
@@ -88,6 +88,8 @@ public class ARPainting : MonoBehaviour
         {
             offsetVector = new Vector3(arCamera.transform.position.x, arCamera.transform.position.y, arCamera.transform.position.z + offset);
             spawnedPaintPrefab = Instantiate(paintPrefab, arCamera.transform.position, arCamera.transform.rotation);
+            spawnedPaintPrefab.AddComponent<ColorPicker>();
+            spawnedPaintPrefab.GetComponent<ColorPicker>().enabled = true;
             //PaintManager.instance.paints.Add(spawnedPaintPrefab);
         }
         else
@@ -101,6 +103,7 @@ public class ARPainting : MonoBehaviour
     private void StopPainting()
     {
         spawnedPaintPrefab.transform.position = spawnedPaintPrefab.transform.position;
+        //Destroy(spawnedPaintPrefab.GetComponent<ColorPicker>());
         //PaintManager.instance.paints.Remove(spawnedPaintPrefab);
         spawnedPaintPrefab = null;
     }
@@ -121,7 +124,7 @@ public class ARPainting : MonoBehaviour
 
     private Vector3 RaycastHitPosition()
     {
-        if(aRRaycastManager.Raycast(new Vector2(Screen.width/2, Screen.height/2), hits, TrackableType.PlaneWithinPolygon))
+        if (aRRaycastManager.Raycast(new Vector2(Screen.width / 2, Screen.height / 2), hits, TrackableType.PlaneWithinPolygon))
         {
             hitPose = hits[0].pose;
             raycastPositionText.text = hitPose.ToString();
@@ -132,13 +135,13 @@ public class ARPainting : MonoBehaviour
             raycastPositionText.text = hitPose.ToString();
             return hitPose.position;
         }
-        
+
     }
 
     public void ChangePaintingType()
     {
         twoDimensional = !twoDimensional;
-        if(twoDimensional == true)
+        if (twoDimensional == true)
         {
             buttonText.text = "2d";
         }

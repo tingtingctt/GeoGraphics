@@ -8,27 +8,36 @@ using UnityEngine.UI;
 public class ColorPicker : MonoBehaviour
 {
 
-    public Slider colorSlider;
+    private Slider colorSlider;
 
-    private ARPainting aRPainting;
+    //private ARPainting aRPainting;
 
 
-    // Start is called before the first frame update
     void Start()
     {
-        colorSlider.onValueChanged.AddListener(delegate { ChangeColor(); });
-        aRPainting = GetComponent<ARPainting>();
+        //Debug.Log("enabled");
+        colorSlider = FindObjectOfType<Slider>();
+        if (colorSlider)
+        {
+            colorSlider.onValueChanged.AddListener(delegate { ChangeColor(); });
+            //aRPainting = GetComponent<ARPainting>();
+        }
+
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnDisable()
     {
         
     }
 
     public void ChangeColor()
     {
-        GameObject aRPaintingPaintPrefab = aRPainting.paintPrefab;
-        aRPaintingPaintPrefab.GetComponent<TrailRenderer>().material.color = Color.HSVToRGB(colorSlider.value, 1, 1);
+        //GameObject aRPaintingPaintPrefab = aRPainting.spawnedPaints[aRPainting.lastPaint];
+        //if (aRPainting.spawnedPaintPrefab != null)
+        //{
+
+        //    aRPaintingPaintPrefab.GetComponent<TrailRenderer>().material.color = Color.HSVToRGB(colorSlider.value, 0.5f, 1);
+        //}
+        this.GetComponent<TrailRenderer>().material.color = Color.HSVToRGB(colorSlider.value, 0.5f, 1);
     }
 }
