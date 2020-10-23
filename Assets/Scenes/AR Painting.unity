@@ -383,7 +383,6 @@ MonoBehaviour:
   offset: 0.3
   menuButton: {fileID: 2048107214}
   twoDimensional: 0
-  spawnedPaintPrefab: {fileID: 0}
   buttonText: {fileID: 849003544}
   raycastPositionText: {fileID: 664373469}
 --- !u!114 &306357649
@@ -398,6 +397,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 631eff00d90aa447997a4db98e866078, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnedPaint: {fileID: 0}
   colorSlider: {fileID: 2072354244}
 --- !u!1 &360071021
 GameObject:

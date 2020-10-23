@@ -23,6 +23,8 @@ public class ARPainting : MonoBehaviour
     private Vector2 touchPosition;
     private Pose hitPose;
 
+    private ColorPicker colorPicker;
+
     public Text buttonText;
     public Text raycastPositionText;
 
@@ -42,6 +44,7 @@ public class ARPainting : MonoBehaviour
     private void Awake()
     {
         aRRaycastManager = GetComponent<ARRaycastManager>();
+        colorPicker = GetComponent<ColorPicker>();
     }
 
 
@@ -88,8 +91,7 @@ public class ARPainting : MonoBehaviour
         {
             offsetVector = new Vector3(arCamera.transform.position.x, arCamera.transform.position.y, arCamera.transform.position.z + offset);
             spawnedPaintPrefab = Instantiate(paintPrefab, arCamera.transform.position, arCamera.transform.rotation);
-            spawnedPaintPrefab.AddComponent<ColorPicker>();
-            spawnedPaintPrefab.GetComponent<ColorPicker>().enabled = true;
+            colorPicker.spawnedPaint = spawnedPaintPrefab;
             //PaintManager.instance.paints.Add(spawnedPaintPrefab);
         }
         else
@@ -114,6 +116,7 @@ public class ARPainting : MonoBehaviour
         if (spawnedPaintPrefab == null)
         {
             spawnedPaintPrefab = Instantiate(paintPrefab, RaycastHitPosition(), arCamera.transform.rotation);
+            colorPicker.spawnedPaint = spawnedPaintPrefab;
         }
         else
         {

@@ -7,8 +7,9 @@ using UnityEngine.UI;
 
 public class ColorPicker : MonoBehaviour
 {
+    public GameObject spawnedPaint;
 
-    private Slider colorSlider;
+    public Slider colorSlider;
 
     //private ARPainting aRPainting;
 
@@ -16,12 +17,9 @@ public class ColorPicker : MonoBehaviour
     void Start()
     {
         //Debug.Log("enabled");
-        colorSlider = FindObjectOfType<Slider>();
-        if (colorSlider)
-        {
+
             colorSlider.onValueChanged.AddListener(delegate { ChangeColor(); });
             //aRPainting = GetComponent<ARPainting>();
-        }
 
     }
 
@@ -38,6 +36,8 @@ public class ColorPicker : MonoBehaviour
 
         //    aRPaintingPaintPrefab.GetComponent<TrailRenderer>().material.color = Color.HSVToRGB(colorSlider.value, 0.5f, 1);
         //}
-        this.GetComponent<TrailRenderer>().material.color = Color.HSVToRGB(colorSlider.value, 0.5f, 1);
+
+
+        spawnedPaint.GetComponent<TrailRenderer>().material.color = Color.HSVToRGB(colorSlider.value, 0.5f, 1);
     }
 }
